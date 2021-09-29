@@ -1,0 +1,10 @@
+server:
+    port: 8090
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/spring_shop
+        username: spring
+        password: spring
+    liquibase:
+        enabled: false
+#        change-log: classpath:db/changelog-master.yaml
