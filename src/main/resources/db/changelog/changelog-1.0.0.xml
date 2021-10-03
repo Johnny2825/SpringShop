@@ -4,8 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="init" author="v.eremin">
-        <createTable tableName="user">
+    <changeSet id="init" author="me">
+        <createTable tableName="person">
             <column name="id" type="uuid">
                 <constraints primaryKey="true"/>
             </column>
@@ -24,10 +24,13 @@
             <column name="created_at" type="timestamp without timezone">
                 <constraints nullable="false"/>
             </column>
+            <column name="password" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
-    <changeSet id="init-1" author="v.eremin">
+    <changeSet id="init-1" author="me">
         <createTable tableName="category">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -39,15 +42,21 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <createTable tableName="product">
             <column name="id" type="uuid">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="varchar(128)"/>
+            <column name="category" type="int">
+                <constraints nullable="false" foreignKeyName="category_id" references="category(id)"/>
+            </column>
+            <column name="name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
             <column name="price" type="varchar(8)"/>
             <column name="count" type="int"/>
-            <column name="created" type="uuid">
-                <constraints nullable="false" foreignKeyName="user_id" references="user(id)"/>
+            <column name="created_by" type="uuid">
+                <constraints nullable="false" foreignKeyName="person_id" references="person(id)"/>
             </column>
             <column name="vendor_code" type="varchar(64)">
                 <constraints nullable="false"/>
