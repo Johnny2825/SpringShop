@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@ToString
 @Entity
 @Table(name = "order")
 public class Order {
@@ -35,7 +34,7 @@ public class Order {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 

@@ -1,17 +1,20 @@
 package com.example.springshop.entity;
 
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 
 @Getter
-@ToString
+@Setter
 @Entity
 @Table(name = "product")
 public class Product {
@@ -35,7 +38,7 @@ public class Product {
     private BigDecimal price;
 
     @Column(name = "count")
-    private int count;
+    private long count;
 
     @Column(name = "vendor_code", nullable = false)
     private String vendorCode;
@@ -43,11 +46,19 @@ public class Product {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by", nullable = false)
     private Person person;
+
+    public void incrementCount() {
+        this.count++;
+    }
+
+    public void decreaseCount(){
+        this.count--;
+    }
 }

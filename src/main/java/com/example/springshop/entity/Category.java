@@ -7,10 +7,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
-@ToString
 @Entity
 @Table(name = "category")
 public class Category {
@@ -31,6 +29,6 @@ public class Category {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> listProduct;
 }
