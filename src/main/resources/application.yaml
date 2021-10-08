@@ -6,5 +6,4 @@ spring:
         username: spring
         password: spring
     liquibase:
-        enabled: false
-#        change-log: classpath:db/changelog-master.yaml
+        change-log: classpath:db/changelog-master.yaml
