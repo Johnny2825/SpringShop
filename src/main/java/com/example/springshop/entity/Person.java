@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "person")
 public class Person {
@@ -59,10 +58,13 @@ public class Person {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Order> listOrders;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Product> listCreatedProducts;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Cart> listCarts;
 
 }
