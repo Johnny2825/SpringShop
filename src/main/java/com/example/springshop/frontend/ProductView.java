@@ -43,7 +43,11 @@ public class ProductView extends VerticalLayout {
         var toCartButton = new Button("Корзина", buttonClickEvent -> {
                 UI.getCurrent().navigate("cart");
         });
-        return new HorizontalLayout(addToCartButton, toCartButton);
+
+        var toPeopleButton = new Button("Пользователи", buttonClickEvent -> {
+            UI.getCurrent().navigate("people");
+        });
+        return new HorizontalLayout(addToCartButton, toCartButton, toPeopleButton);
     }
 
     private void initProductGrid() {

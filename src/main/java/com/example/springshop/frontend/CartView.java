@@ -42,7 +42,8 @@ public class CartView extends VerticalLayout {
     }
 
     private void initCartGrid() {
-        var products = cartService.getAllProducts(cartService.findCartByPersonId("466f83d2-337d-478b-b21f-a3dcd613523e").getId().toString());
+
+        var products = cartService.getAllProducts();
         cartGrid.setItems(products);
         cartGrid.setColumns("name", "price", "count", "vendorCode");
         cartGrid.setSizeUndefined();

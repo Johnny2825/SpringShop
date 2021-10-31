@@ -14,27 +14,29 @@ public class CartService {
     
     private final CartRepository cartRepository;
     private final PersonRepository personRepository;
+    private final Person person;
+    private Cart cart;
 
     public CartService(CartRepository cartRepository, PersonRepository personRepository) {
         this.cartRepository = cartRepository;
         this.personRepository = personRepository;
+        this.person = this.personRepository.findById(UUID.fromString("7d07a3d4-9eb4-48e5-a181-f90c849ddfed")).get();
     }
 
-    public List<Cart.InnerProduct> getAllProducts(String id) {
-        Cart cart = cartRepository.findById(UUID.fromString(id)).get();
+    public List<Cart.InnerProduct> getAllProducts() {
+        cart = cartRepository.findByPersonId(person.getId()).orElse(new Cart());
+
+        if (cart.getProducts() == null) {
+            cart.setPerson(person);
+            cart.setProducts(new ArrayList<>());
+        }
+
         return cart.getProducts();
     }
 
-    public Cart findCartByPersonId(String id) {
-        return cartRepository.findByPersonId(UUID.fromString(id)).orElseThrow(() -> new NoSuchElementException("Такого человека нет"));
-    }
-
     public void addProductToCart(Set<Product> set) {
-        Cart cart = new Cart();
-        cart.setPerson(personRepository.findById(UUID.fromString("466f83d2-337d-478b-b21f-a3dcd613523e")).orElseThrow(() -> new NoSuchElementException("Нету такого человека")));
-        cart.setProducts(castProductToInnerProduct(set));
+        cart.getProducts().addAll(castProductToInnerProduct(set));
         cart = cartRepository.save(cart);
-        System.out.println(cart);
     }
 
     private List<Cart.InnerProduct> castProductToInnerProduct(Set<Product> setProduct) {

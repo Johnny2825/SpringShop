@@ -1,6 +1,8 @@
 package com.example.springshop.runner;
 
+import com.example.springshop.entity.Cart;
 import com.example.springshop.entity.Category;
+import com.example.springshop.entity.Person;
 import com.example.springshop.entity.Product;
 import com.example.springshop.repository.CartRepository;
 import com.example.springshop.repository.CategoryRepository;
@@ -38,14 +40,14 @@ public class Runner implements CommandLineRunner {
 //        Cart cart = new Cart();
 //        cart.setPerson(person);
 //
-//        Cart.InnerProduct product = new Cart.InnerProduct();
+//        Cart.InnerProduct productIn = new Cart.InnerProduct();
 //
-//        product.setCount(1);
-//        product.setName("Хлеб");
-//        product.setPrice(BigDecimal.valueOf(45));
+//        productIn.setCount(1);
+//        productIn.setName("Хлеб");
+//        productIn.setPrice(BigDecimal.valueOf(45));
 //
-//        cart.setProducts(List.of(product));
-//
+//        cart.setProducts(List.of(productIn));
+//        personRepository.save(person);
 //        cartRepository.save(cart);
 //
 //        System.out.println(cart.getProducts());
@@ -54,7 +56,7 @@ public class Runner implements CommandLineRunner {
 //        System.out.println(person);
 
 
-//        var person = personRepository.findById(UUID.fromString("466f83d2-337d-478b-b21f-a3dcd613643e")).get();
+//        Person person = personRepository.findById(UUID.fromString("7d07a3d4-9eb4-48e5-a181-f90c849ddfed")).get();
 //        Product product = new Product();
 //        product.setPerson(person);
 //        product.setName("Сыр");
