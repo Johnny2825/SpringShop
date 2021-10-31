@@ -6,17 +6,20 @@ import elemental.json.Json;
 import elemental.json.JsonObject;
 import liquibase.pro.packaged.S;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-@ToString
+@Setter
 @Entity
 @Table(name = "cart")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
@@ -37,7 +40,7 @@ public class Cart {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
 
@@ -45,11 +48,12 @@ public class Cart {
     private List<InnerProduct> products;
 
     @Getter
-    private static class InnerProduct {
-        private String id;
+    @Setter
+    public static class InnerProduct implements Serializable {
+        private UUID id;
         private String name;
         private long count;
-        private long price;
+        private BigDecimal price;
         private String vendorCode;
     }
 
