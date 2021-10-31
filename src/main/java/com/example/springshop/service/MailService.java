@@ -70,7 +70,7 @@ public class MailService {
         MimeMessage email = new MimeMessage(session);
         try {
             email.setFrom(new InternetAddress(user));
-            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress("tarkhov.28@yandex.ru"));
+            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress("xzi123@mail.ru"));
             email.setSubject("Spring-shop homework 8");
             email.setText("Spring-shop with GMAIL from Tarkhov Evgeniy");
 //            email.setContent(createAttachment());
