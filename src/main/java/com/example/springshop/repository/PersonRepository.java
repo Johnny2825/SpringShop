@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface PersonRepository extends CrudRepository<Person, UUID> {
     public List<Person> findAll();
 
+    public Optional<Person> findByLogin(String login);
 }

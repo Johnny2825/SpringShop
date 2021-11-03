@@ -3,6 +3,7 @@ package com.example.springshop.service;
 
 import com.example.springshop.entity.Person;
 import com.example.springshop.repository.PersonRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Person> getAll() {
@@ -25,8 +28,13 @@ public class PersonService {
     }
 
     public Person save(Person person) {
-        System.out.println(person);
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
+    }
+
+    public Person findByLogin(String login) {
+        return personRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден по логину"));
     }
 
     public Person getById(UUID id){

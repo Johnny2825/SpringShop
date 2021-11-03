@@ -9,4 +9,4 @@ spring:
     liquibase:
         change-log: classpath:db/changelog-master.yaml
     jpa:
-        show-sql: true
+#        show-sql: true

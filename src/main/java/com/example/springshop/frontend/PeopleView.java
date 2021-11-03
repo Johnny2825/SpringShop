@@ -29,19 +29,16 @@ public class PeopleView extends VerticalLayout {
     }
 
     private HorizontalLayout initPeopleButton() {
-        var createNewPersonButton = new Button("Создать нового пользователя", buttonClickEvent -> {
-            UI.getCurrent().navigate("people/new");
-        });
 
         var toProductButton = new Button("Продукты", buttonClickEvent -> {
             UI.getCurrent().navigate("products");
         });
-        return new HorizontalLayout(createNewPersonButton, toProductButton);
+        return new HorizontalLayout(toProductButton);
     }
 
     private void initPersonGrid() {
         var people = personService.getAll();
-        personGrid.setColumns("firstName", "lastName", "patronymic", "phone", "role", "email");
+        personGrid.setColumns("firstName", "lastName", "patronymic", "login", "phone", "role", "email");
         personGrid.setSizeUndefined();
         personGrid.asSingleSelect();
 //                .addValueChangeListener(e -> UI.getCurrent().navigate("person/" + e.getValue().getId()));
