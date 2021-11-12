@@ -61,14 +61,26 @@ public class Person {
     @Column(name = "password", length = 128, nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private boolean isDisabled;
+
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Order> listOrders;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Product> listCreatedProducts;
+//    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+//    private List<Product> listCreatedProducts;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Cart> listCarts;
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public Person setDisabled(boolean disabled) {
+        isDisabled = disabled;
+        return this;
+    }
 
     public Person setId(UUID id) {
         this.id = id;
