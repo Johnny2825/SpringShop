@@ -32,75 +32,53 @@ public class MailService {
     private static final String APPLICATION_NAME = "spring-shop";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
+
     private static final List<String> SCOPES = List.of(GmailScopes.GMAIL_LABELS, GmailScopes.MAIL_GOOGLE_COM, GmailScopes.GMAIL_SEND);
     private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credential.json";
 
-    private static Credential getCredentials(NetHttpTransport httpTransport) {
-        try (InputStream in = new FileInputStream(CREDENTIALS_FILE_PATH)) {
-            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                    .setDataStoreFactory(new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH)))
-                    .setAccessType("offline")
-                    .build();
-            LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-            return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static Credential getCredentials(NetHttpTransport httpTransport) throws IOException {
+        InputStream in = new FileInputStream(CREDENTIALS_FILE_PATH);
+        if (in == null) {
+            throw new RuntimeException("Не найден файл с кредами");
         }
-        return null;
+
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+                .setDataStoreFactory(new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH)))
+                .setAccessType("offline")
+                .build();
+
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public static void main(String[] args){
-        try {
-            NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-            Gmail service = new Gmail.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
-            String user = "me";
-            Message message = createMessageWithEmail(createEmail(user));
-            service.users().messages().send(user, message).execute();
-            System.out.println("Email sent");
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public static void sendMessage(String email, String subject, String messageText) throws GeneralSecurityException, IOException, MessagingException {
+        NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        Gmail service = new Gmail.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
 
-    private static MimeMessage createEmail(String user) {
+        String user = "me";
         Session session = Session.getDefaultInstance(new Properties(), null);
-        MimeMessage email = new MimeMessage(session);
-        try {
-            email.setFrom(new InternetAddress(user));
-            email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress("xzi123@mail.ru"));
-            email.setSubject("Spring-shop homework 8");
-            email.setText("Spring-shop with GMAIL from Tarkhov Evgeniy");
-//            email.setContent(createAttachment());
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        return email;
+
+        MimeMessage mimeMessage = new MimeMessage(session);
+        mimeMessage.setFrom(new InternetAddress(user));
+        mimeMessage.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(email));
+        mimeMessage.setSubject(subject);
+        mimeMessage.setText(messageText);
+        Message message = createMessageWithEmail(mimeMessage);
+
+        service.users().messages().send(user, message).execute();
     }
 
-    private static Message createMessageWithEmail(MimeMessage email){
-        String encodedEmail = "";
-        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            email.writeTo(buffer);
-            byte[] bytes = buffer.toByteArray();
-            encodedEmail = Base64.encodeBase64URLSafeString(bytes);
-        } catch (IOException | MessagingException e) {
-            e.printStackTrace();
-        }
-        return new Message().setRaw(encodedEmail);
-    }
-
-    private static Multipart createAttachment() throws MessagingException {
-        String file = "src/main/resources/application.yaml";
-        String fileName = "properties";
-        DataSource source = new FileDataSource(file);
-        MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(fileName);
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
-        return multipart;
+    private static Message createMessageWithEmail(MimeMessage email) throws MessagingException, IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        email.writeTo(buffer);
+        byte[] bytes = buffer.toByteArray();
+        String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
+        Message message = new Message();
+        message.setRaw(encodedEmail);
+        return message;
     }
 }
