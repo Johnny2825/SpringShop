@@ -2,15 +2,18 @@ package com.example.springshop.entity;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
-@Table(name = "order")
+@Table(name = "person_order")
 public class Order {
 
     @PrePersist
@@ -26,7 +29,7 @@ public class Order {
     private UUID id;
 
     @Column(name = "cost", nullable = false)
-    private long cost;
+    private BigDecimal cost;
 
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
@@ -37,5 +40,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
+
+    @OneToOne
+    private Cart cart;
 
 }

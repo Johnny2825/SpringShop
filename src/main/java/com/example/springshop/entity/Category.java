@@ -31,4 +31,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> listProduct;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

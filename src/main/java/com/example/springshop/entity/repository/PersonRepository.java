@@ -1,4 +1,4 @@
-package com.example.springshop.repository;
+package com.example.springshop.entity.repository;
 
 import com.example.springshop.entity.Person;
 import org.springframework.data.repository.CrudRepository;
